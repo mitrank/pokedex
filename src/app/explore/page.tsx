@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Box,
@@ -14,9 +14,15 @@ import { PokedexTable } from "~/components/PokedexTable";
 
 const ExplorePage = () => {
   const [selectedType, setSelectedType] = useState<string | undefined>();
+  const [page, setPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(10);
 
-  const { data: pokemon, isLoading } = api.pokemon.getPokemonType.useQuery(
-    { type: selectedType },
+  useEffect(() => {
+    setPage(0);
+  }, [selectedType]);
+
+  const { data, isLoading } = api.pokemon.getPokemonType.useQuery(
+    { type: selectedType, page, pageSize },
     { placeholderData: (prev) => prev },
   );
 
@@ -47,12 +53,22 @@ const ExplorePage = () => {
         />
 
         {/* Final table */}
-        {isLoading && !pokemon ? (
+        {isLoading && !data ? (
           <Box sx={{ display: "flex", justifyContent: "center", py: 10 }}>
             <CircularProgress color="secondary" />
           </Box>
         ) : (
-          <PokedexTable pokemonArray={pokemon ?? []} />
+          <PokedexTable
+            pokemonArray={data?.items ?? []}
+            totalCount={data?.totalCount ?? 0}
+            page={page}
+            rowsPerPage={pageSize}
+            onPageChange={(_, newPage) => setPage(newPage)}
+            onRowsPerPageChange={(e) => {
+              setPageSize(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+          />
         )}
       </Paper>
     </Container>

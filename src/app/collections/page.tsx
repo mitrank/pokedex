@@ -21,6 +21,8 @@ import { useState } from "react";
 const CollectionsPage = () => {
   const [input, setInput] = useState("");
   const [pokemonNames, setPokemonNames] = useState<string[]>([]);
+  const [page, setPage] = useState<number>(0);
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10);
 
   const { data: pokemonArray, isLoading } =
     api.pokemon.getPokemonArray.useQuery(
@@ -112,7 +114,16 @@ const CollectionsPage = () => {
                 <CircularProgress />
               </Box>
             ) : (
-              <PokedexTable pokemonArray={pokemonArray ?? []} />
+              <PokedexTable
+                pokemonArray={pokemonArray ?? []}
+                totalCount={pokemonArray?.length ?? 0}
+                page={page}
+                rowsPerPage={rowsPerPage}
+                onPageChange={(_, newPage) => setPage(newPage)}
+                onRowsPerPageChange={(e) =>
+                  setRowsPerPage(parseInt(e.target.value, 10))
+                }
+              />
             )}
             {pokemonArray &&
               pokemonArray.length < pokemonNames.length &&

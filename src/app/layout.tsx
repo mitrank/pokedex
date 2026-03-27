@@ -1,28 +1,47 @@
-import "~/styles/globals.css";
-
-import { type Metadata } from "next";
-import { Geist } from "next/font/google";
-
-import { TRPCReactProvider } from "~/trpc/react";
-
-export const metadata: Metadata = {
-  title: "Pokedex",
-  description: "Developed by Mitrank Shah",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
-};
-
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-});
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { ThemeProvider } from "@mui/material/styles";
+import {
+  CssBaseline,
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  Box,
+} from "@mui/material";
+import theme from "../theme";
+import Link from "next/link";
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
+    <html lang="en">
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+
+            <Box sx={{ flexGrow: 1 }}>
+              <AppBar position="static" color="primary" elevation={0}>
+                <Toolbar>
+                  <Typography
+                    variant="h6"
+                    sx={{ flexGrow: 1, fontWeight: "bold" }}
+                  >
+                    POKEDEX
+                  </Typography>
+                  <Button color="inherit" component={Link} href="/">
+                    Dashboard
+                  </Button>
+                </Toolbar>
+              </AppBar>
+            </Box>
+
+            <main>{children}</main>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

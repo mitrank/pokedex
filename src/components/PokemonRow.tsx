@@ -12,14 +12,30 @@ interface PokemonRowProps {
 
 const PokemonRow = ({ pokemon }: PokemonRowProps) => {
   return (
-    <Box>
-      <Typography>ID: {pokemon.id}</Typography>
+    <Box
+      sx={{
+        p: 2,
+        display: "flex",
+        alignItems: "center",
+        gap: 3,
+        borderBottom: "1px solid #eee",
+        flexWrap: "wrap",
+      }}
+    >
+      <Typography variant="h6" color="text.secondary">
+        ID: {pokemon.id}
+      </Typography>
       <Avatar
         src={pokemon.sprite}
         alt={pokemon.name}
-        sx={{ height: 60, width: 60 }}
+        sx={{ height: 120, width: 120 }}
       />
-      <Typography>Name: {pokemon.name}</Typography>
+      <Typography
+        variant="h5"
+        sx={{ flexGrow: 1, textTransform: "capitalize" }}
+      >
+        {pokemon.name}
+      </Typography>
       <Stack direction="row" spacing={1}>
         {pokemon.types.map((type) => (
           <Chip key={type} label={type} color="primary" variant="outlined" />

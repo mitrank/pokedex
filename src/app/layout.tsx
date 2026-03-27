@@ -1,3 +1,4 @@
+import { TRPCReactProvider } from "~/trpc/react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import {
@@ -19,29 +20,31 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
+        <TRPCReactProvider>
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
 
-            <Box sx={{ flexGrow: 1 }}>
-              <AppBar position="static" color="primary" elevation={0}>
-                <Toolbar>
-                  <Typography
-                    variant="h6"
-                    sx={{ flexGrow: 1, fontWeight: "bold" }}
-                  >
-                    POKEDEX
-                  </Typography>
-                  <Button color="inherit" component={Link} href="/">
-                    Dashboard
-                  </Button>
-                </Toolbar>
-              </AppBar>
-            </Box>
+              <Box sx={{ flexGrow: 1 }}>
+                <AppBar position="static" color="primary" elevation={0}>
+                  <Toolbar>
+                    <Typography
+                      variant="h6"
+                      sx={{ flexGrow: 1, fontWeight: "bold" }}
+                    >
+                      POKEDEX
+                    </Typography>
+                    <Button color="inherit" component={Link} href="/">
+                      Dashboard
+                    </Button>
+                  </Toolbar>
+                </AppBar>
+              </Box>
 
-            <main>{children}</main>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+              <main>{children}</main>
+            </ThemeProvider>
+          </AppRouterCacheProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );

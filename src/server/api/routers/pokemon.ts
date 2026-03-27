@@ -6,27 +6,24 @@ export const pokemonRouter = createTRPCRouter({
   getPokemon: publicProcedure
     .input(z.object({ name: z.string() }))
     .query(async ({ ctx, input }) => {
-      const pokemon = await ctx.db.pokemon.findUnique({
-        where: { name: input.name },
+      return await ctx.db.pokemon.findUnique({
+        where: { name: input.name.toLowerCase().trim() },
       });
-      return pokemon ? { ...pokemon, types: pokemon.types.split(",") } : null;
     }),
 
   // Part 2: To access all pokemons in the input array
   getPokemonArray: publicProcedure
     .input(z.object({ names: z.array(z.string()) }))
     .query(async ({ ctx, input }) => {
-      const pokemonArray = await ctx.db.pokemon.findMany({
+      const cleanedNames = input.names.map((n) => n.toLowerCase().trim());
+
+      return await ctx.db.pokemon.findMany({
         where: {
           name: {
-            in: input.names,
+            in: cleanedNames,
           },
         },
       });
-      return pokemonArray.map((pokemon) => ({
-        ...pokemon,
-        types: pokemon.types.split(","),
-      }));
     }),
 
   // Part 3: To access pokemon by type
@@ -41,21 +38,20 @@ export const pokemonRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const skip = input.page * input.pageSize;
 
+      const where = input.type
+        ? { types: { has: input.type.toLowerCase() } }
+        : {};
+
       const [items, totalCount] = await Promise.all([
         ctx.db.pokemon.findMany({
-          where: input.type ? { types: { contains: input.type } } : {},
+          where,
           take: input.pageSize,
-          skip: skip,
+          skip,
           orderBy: { id: "asc" },
         }),
-        ctx.db.pokemon.count({
-          where: input.type ? { types: { contains: input.type } } : {},
-        }),
+        ctx.db.pokemon.count({ where }),
       ]);
 
-      return {
-        items: items.map((p) => ({ ...p, types: p.types.split(",") })),
-        totalCount,
-      };
+      return { items, totalCount };
     }),
 });

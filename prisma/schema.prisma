@@ -3,18 +3,18 @@
 
 generator client {
     provider = "prisma-client-js"
-    output   = "../generated/prisma"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./db.sqlite"
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
 }
 
 model Pokemon {
     id        Int      @id @default(autoincrement())
     name      String   @unique
-    types     String
+    types     String[]
     sprite    String
     createdAt DateTime @default(now())
 }

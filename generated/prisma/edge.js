@@ -149,13 +149,13 @@ const config = {
   "inlineDatasources": {
     "db": {
       "url": {
-        "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "fromEnvVar": null,
+        "value": "file:./db.sqlite"
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Pokemon {\n  id        Int      @id @default(autoincrement())\n  name      String   @unique\n  types     String\n  sprite    String\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "46a35e6fb97719aa894d98e1e408138ac07358cc933c68d25c94120331d2c8b8",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"sqlite\"\n  url      = \"file:./db.sqlite\"\n}\n\nmodel Pokemon {\n  id        Int      @id @default(autoincrement())\n  name      String   @unique\n  types     String\n  sprite    String\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "38018f69c9712c63b0df235a03e6cb95a585c4929c804c35cbab125f57e276d6",
   "copyEngine": true
 }
 config.dirname = '/'
@@ -166,9 +166,7 @@ config.engineWasm = undefined
 config.compilerWasm = undefined
 
 config.injectableEdgeEnv = () => ({
-  parsed: {
-    DATABASE_URL: typeof globalThis !== 'undefined' && globalThis['DATABASE_URL'] || typeof process !== 'undefined' && process.env && process.env.DATABASE_URL || undefined
-  }
+  parsed: {}
 })
 
 if (typeof globalThis !== 'undefined' && globalThis['DEBUG'] || typeof process !== 'undefined' && process.env && process.env.DEBUG || undefined) {
